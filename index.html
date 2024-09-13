@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv = "X-UA-Compatible" content="IE=edge">
+    <link rel = "shortcut icon" href="/Pinpoint Moment.png">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+
+    <script defer src="script.js"></script>
+    <title>Pinpoint Moments</title>
+</head>
+<body>
+    <header>
+        <img src="Pinpoint Moment.png" alt="Logo" class="logo"/>
+    </header>
+
+    <div class = "sidebar">
+        <ul class="events">
+            <form class="form hidden">
+                <div class="form_row">
+                    <label class="form__label">Event</label>
+                    <input class="form__input form__input--event" type="text" placeholder="Name of event"/>    
+                </div>
+                <div class="form_row">
+                    <label class="form__label">Date</label>
+                    <input class="form__input form__input--date" type="text" placeholder="Date"/>
+                </div>
+                <div class="form_row">
+                    <label class="form__label">Start Time</label>
+                    <input class="form__input form__input--startTime" type="text" placeholder="Time it starts"/>
+                </div>
+                <div class="form_row">
+                    <label class="form__label">End Time</label>
+                    <input class="form__input form__input--endTime" type="text" placeholder="Time it ends"/>
+                </div>
+                <button class="form__btn">OK</button>
+            </form>
+            
+        </ul>    
+    </div>
+    <div id="map"></div>   
+</body>
+</html>
