@@ -29,7 +29,7 @@ header {
 }
 
 header .logo {
-    width: 65px; 
+    width: 60px; 
     height: auto;
 }
 .header-title {
@@ -190,8 +190,8 @@ background-color: var(--color-dark--2);
   /* MAP */
   #map{
     flex: 1;
-  height: 100%;
-  background-color: var(--color-light--1);
+    height: calc(100vh - 9rem);
+    background-color: var(--color-light--1);
   }
   
   
