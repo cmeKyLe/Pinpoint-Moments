@@ -180,7 +180,6 @@ background-color: var(--color-dark--2);
     cursor: pointer;
     transition: background-color 0.3s;
     text-align: center;
-    display:none;
   }
 
   .form__btn:hover{
@@ -201,6 +200,7 @@ background-color: var(--color-dark--2);
     color: var(--color-light--2);
     border-radius: 5px;
     padding-right: 0.6rem;
+    border-left: var(--color-dark--1) ;
   }
   
   .leaflet-popup .leaflet-popup-content {
@@ -211,13 +211,5 @@ background-color: var(--color-dark--2);
     background-color: var(--color-dark--1);
   }
   
-  .running-popup .leaflet-popup-content-wrapper {
-    border-left: 5px solid var(--color-brand--2);
-  }
-  .cycling-popup .leaflet-popup-content-wrapper {
-    border-left: 5px solid var(--color-brand--1);
-  }
-
-
 
 
