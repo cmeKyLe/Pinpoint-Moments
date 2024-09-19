@@ -22,13 +22,17 @@ function getRandomColor() {
 }
 
 class Event{
-    constructor(coords, event, time) {
+    constructor(coords, event,date, startTime, endTime) {
         this.coords = coords;
         this.event = event;
-        this.time = time;
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 }
 
+////////////////////////////////
+// Applicatioon Architecture
 class App{
     #map = L.map('map');
     #mapEvent;
@@ -71,12 +75,12 @@ class App{
     _newEvent(e) {
         e.preventDefault();
         
-            const { lat, lng } = this.#mapEvent.latlng;
-            const randomColor = getRandomColor();
+        const { lat, lng } = this.#mapEvent.latlng;
+        const randomColor = getRandomColor();
         
             
-            const marker = L.marker([lat, lng]).addTo(this.#map)
-                .bindPopup(L.popup({
+        const marker = L.marker([lat, lng]).addTo(this.#map)
+            .bindPopup(L.popup({
                     maxWidth: 250,
                     minWidth: 100,
                     autoClose: false,
