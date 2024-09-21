@@ -1,26 +1,25 @@
 const form = document.querySelector('.form');
 const events = document.querySelector('.events');
-const inputEvent = document.querySelector('form__input--event');
-const inputDate = document.querySelector('form__input--date');
-const inputStartTime = document.querySelector('form__input--startTime');
-const inputEndTime = document.querySelector('form__input--endTime');
+const inputEvent = document.querySelector('.form__input--event');
+const inputDate = document.querySelector('.form__input--date');
+const inputStartTime = document.querySelector('.form__input--startTime');
+const inputEndTime = document.querySelector('.form__input--endTime');
 
 //var map = L.map('map');
 let mapEvent;
 
-
+// Random Border Color
 const rootStyles = getComputedStyle(document.documentElement);
 const brandColors = [
     rootStyles.getPropertyValue('--color-brand--1'),
     rootStyles.getPropertyValue('--color-brand--2'),
     rootStyles.getPropertyValue('--color-brand--3')
 ];
-
-
 function getRandomColor() {
     return brandColors[Math.floor(Math.random() * brandColors.length)];
 }
 
+//Event Clas for event objects
 class Event{
     constructor(coords, event,date, startTime, endTime) {
         this.coords = coords;
@@ -69,11 +68,47 @@ class App{
     _showForm(mapE) { 
         this.#mapEvent = mapE;
         form.classList.remove('hidden');
-        inputEvent.focus();      
+    
+    }
+    
+    _checkFormValidity() {
+            if (!inputEvent.value.trim() || !inputDate.value.trim() || !inputStartTime.value.trim() || !inputEndTime.value.trim()) {
+                alert("Please fill out all fields before submitting.");
+                return false;
+            }
+            return true;
         }
+    
 
     _newEvent(e) {
         e.preventDefault();
+        if (!this._checkFormValidity())return;
+        
+
+        //get data from form
+        const event = inputEvent.value;
+        const date = inputDate.value;
+        const startTime = inputStartTime.value;
+        const endTime = inputEndTime.value;
+
+
+
+        //check if data is valid
+        
+
+        //If data is valid, create a new event object
+
+
+        //add new obeject to event array
+
+
+        //render event on map as marker
+
+
+        //render workout on list
+
+        
+
         
         const { lat, lng } = this.#mapEvent.latlng;
         const randomColor = getRandomColor();
@@ -96,7 +131,7 @@ class App{
                     latestPopup.style.borderLeft = `5px solid ${randomColor}`;
                 }
             }, 5); 
-        
+            //hide form and clear form
             form.reset();
             form.classList.add('hidden'); 
             mapEvent = null; }
