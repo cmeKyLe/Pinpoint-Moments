@@ -21,12 +21,15 @@ function getRandomColor() {
 
 //Event Clas for event objects
 class Event{
-    constructor(coords, event,date, startTime, endTime) {
+    date = new Date();
+    id = (Date.now() + ``).slice(-10);
+    constructor(coords, event,date, startTime, endTime, color) {
         this.coords = coords;
         this.event = event;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.color = color;
     }
 }
 
@@ -35,9 +38,14 @@ class Event{
 class App{
     #map = L.map('map');
     #mapEvent;
+    #events = [];
     constructor() { 
+        
         this._getPosition();
+
+        this._getLocalStorage();
         form.addEventListener('submit', this._newEvent.bind(this)); 
+        events.addEventListener('click', this._moveToPopUp.bind(this));
     }
     _getPosition() {
         if (navigator.geolocation) {
@@ -63,6 +71,8 @@ class App{
 
         
         this.#map.on('click', this._showForm.bind(this));
+
+        
         }
 
     _showForm(mapE) { 
@@ -82,45 +92,41 @@ class App{
 
     _newEvent(e) {
         e.preventDefault();
-        if (!this._checkFormValidity())return;
-        
 
-        //get data from form
+        //get data 
+        const { lat, lng } = this.#mapEvent.latlng;
         const event = inputEvent.value;
         const date = inputDate.value;
         const startTime = inputStartTime.value;
         const endTime = inputEndTime.value;
-
-
-
-        //check if data is valid
-        
-
-        //If data is valid, create a new event object
-
-
+        const color = getRandomColor();
+        //check if data is valid, create new object
+        if (!this._checkFormValidity()) return;
         //add new obeject to event array
+        
+            const ev = new Event([lat, lng], event, date, startTime, endTime,color);
+            this.#events.push(ev);
+            this._renderEventMarker(ev,color);
+            this._renderEvent(ev);
 
+        this._setLocalStorage();
 
-        //render event on map as marker
-
-
-        //render workout on list
-
+        
+    }
         
 
         
-        const { lat, lng } = this.#mapEvent.latlng;
-        const randomColor = getRandomColor();
         
-            
-        const marker = L.marker([lat, lng]).addTo(this.#map)
+        
+        
+    _renderEventMarker(eve,randomColor) {
+        L.marker(eve.coords).addTo(this.#map)
             .bindPopup(L.popup({
                     maxWidth: 250,
                     minWidth: 100,
                     autoClose: false,
                     closeOnClick: false,
-                }).setContent("Hello, World"))
+                }).setContent(`${eve.event}:${eve.date}`))
                 .openPopup();
         
             
@@ -134,7 +140,62 @@ class App{
             //hide form and clear form
             form.reset();
             form.classList.add('hidden'); 
-            mapEvent = null; }
+        mapEvent = null;
+    }
+
+    _renderEvent(eve) {
+        const html = `
+        <li class="events__item event" data-id="${eve.id}" style="border-left: 5px solid ${eve.color};">
+            <h2 class="event__title">${eve.event} </h2>
+                <div class="event__info">
+                    <span class="event__date">Date:${eve.date}</span>
+                </div>
+                <div class="event__info">
+                    <span class="event__time">Start:${eve.startTime} - End:${eve.endTime}</span>
+                </div>         
+        </li>`;
+        form.insertAdjacentHTML('afterend', html);
+    }
+
+    _moveToPopUp(e) {
+        const eventEl = e.target.closest(`.events__item`);
+
+
+        if (!eventEl) return;
+
+        const evnt = this.#events.find(ev => ev.id === eventEl.dataset.id);
+
+        this.#map.setView(evnt.coords, 13, {
+            animate: true,
+            pan: {
+                duration: 1
+            },
+        });
+    }
+
+    _setLocalStorage() {
+        localStorage.setItem(`events`, JSON.stringify(this.#events));
+    }
+
+    _getLocalStorage() {
+        const data = JSON.parse(localStorage.getItem(`events`));
+        if (!data) return;
+
+        this.#events = data;
+
+        this.#events.forEach(eve => {
+            this._renderEvent(eve);
+            this._renderEventMarker(eve);
+         });
+    }
+
+    reset() {
+        localStorage.removeItem(`events`);
+        location.reload();
+    }
+    
+
+    
     
 }
 
