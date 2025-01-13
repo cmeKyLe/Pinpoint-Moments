@@ -38,6 +38,7 @@ class App {
     #mapEvent;
     #events = [];
     #markers = new Map(); // Track markers with event IDs
+    #temporaryMarker; // Temporary marker when the form is shown
 
     constructor() {
         this._getPosition();
@@ -46,6 +47,7 @@ class App {
         // Event listeners
         form.addEventListener('submit', this._newEvent.bind(this));
         events.addEventListener('click', this._handleEventClick.bind(this));
+        document.querySelector('.form__btn--delete').addEventListener('click', this._deleteTemporaryMarker.bind(this));
     }
 
     _getPosition() {
@@ -73,6 +75,11 @@ class App {
     _showForm(mapE) {
         this.#mapEvent = mapE;
         form.classList.remove('hidden');
+
+        // Add a temporary marker
+        const { lat, lng } = mapE.latlng;
+        if (this.#temporaryMarker) this.#map.removeLayer(this.#temporaryMarker);
+        this.#temporaryMarker = L.marker([lat, lng]).addTo(this.#map);
     }
 
     _checkFormValidity() {
@@ -101,33 +108,53 @@ class App {
         this._renderEventMarker(newEvent);
         this._renderEvent(newEvent);
         this._setLocalStorage();
+
+        // Remove temporary marker after form submission
+        if (this.#temporaryMarker) {
+            this.#map.removeLayer(this.#temporaryMarker);
+            this.#temporaryMarker = null;
+        }
+
+        form.reset();
+        form.classList.add('hidden');
+    }
+
+    _deleteTemporaryMarker() {
+        // Close the form
+        form.classList.add('hidden');
+        form.reset();
+
+        // Remove the temporary marker from the map
+        if (this.#temporaryMarker) {
+            this.#map.removeLayer(this.#temporaryMarker);
+            this.#temporaryMarker = null;
+        }
+
+        // Clear mapEvent as well
+        this.#mapEvent = null;
     }
 
     _renderEventMarker(event) {
         const marker = L.marker(event.coords).addTo(this.#map)
-        .bindPopup(
-            L.popup({
-                maxWidth: 250,
-                minWidth: 100,
-                autoClose: false,
-                closeOnClick: false,
-            }).setContent(`<span>${event.event}</span>`)
-        );
+            .bindPopup(
+                L.popup({
+                    maxWidth: 250,
+                    minWidth: 100,
+                    autoClose: false,
+                    closeOnClick: false,
+                }).setContent(`<span>${event.event}</span>`)
+            );
 
-    // Dynamically style the popup's left border
-    marker.on('popupopen', () => {
-        const popupElements = document.querySelectorAll('.leaflet-popup-content-wrapper');
-        const latestPopup = popupElements[popupElements.length - 1];
-        if (latestPopup) {
-            latestPopup.style.borderLeft = `5px solid ${event.color}`;
-        }
-    });
+        // Dynamically style the popup's left border
+        marker.on('popupopen', () => {
+            const popupElements = document.querySelectorAll('.leaflet-popup-content-wrapper');
+            const latestPopup = popupElements[popupElements.length - 1];
+            if (latestPopup) {
+                latestPopup.style.borderLeft = `5px solid ${event.color}`;
+            }
+        });
 
-    this.#markers.set(event.id, marker);
-
-    form.reset();
-    form.classList.add('hidden');
-    this.#mapEvent = null;
+        this.#markers.set(event.id, marker);
     }
 
     _renderEvent(event) {
@@ -212,6 +239,7 @@ class App {
 }
 
 const app = new App();
+
 
 
 
