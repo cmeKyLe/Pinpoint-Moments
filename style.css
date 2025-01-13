@@ -93,6 +93,7 @@ background-color: var(--color-dark--2);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  position: relative;
 }
 
 .event__title{
@@ -210,6 +211,34 @@ background-color: var(--color-dark--2);
   .leaflet-popup .leaflet-popup-tip {
     background-color: var(--color-dark--1);
   }
-  
+
+  .events__item .btn-delete {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: transparent;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: 2.5rem; /* Set width to ensure it's circular */
+    height: 2.5rem; /* Set height to match width */
+    border: none;
+    border-radius: 50%;
+    display: flex; /* Flexbox for centering */
+    align-items: center; /* Vertically center */
+    justify-content: center; /* Horizontally center */
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.events__item .btn-delete:hover {
+    background-color: #d43c31;
+}
+
+.events__item .btn-delete:active {
+    background-color: #b83229;
+}
+
+
 
 
